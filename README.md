@@ -37,9 +37,9 @@ The original entry point accepts the same bots and options as before:
 
 ```python
 from auctioneer import Auctioneer
-from bots import flat_bot_10, random_bot
+from bots import fixed_bid_10, random_budget_bidder
 
-winners = Auctioneer(room=[flat_bot_10, random_bot], slowdown=0).run_auction()
+winners = Auctioneer(room=[fixed_bid_10, random_budget_bidder], slowdown=0).run_auction()
 ```
 
 ## Architecture
@@ -63,19 +63,19 @@ The browser can reconnect using the game's URL, inspect stored rounds, play them
 
 | Strategy | Python module | Approach |
 | --- | --- | --- |
-| Collection Balancer | `bots.u5726455` | Prioritizes artists with fewer paintings and adjusts to scarcity. |
-| Room-Size Bidder | `bots.u5726455_i` | Uses different pricing and spending rules in small and large rooms. |
-| Adaptive Market Bidder | `bots.u5726455_i2` | Learns from prices and its own recent wins and losses. |
-| Fixed-Bid Specialist | `bots.u5726455_i2_i` | Detects recurring fixed prices and bids above them when it needs the artist. |
-| Weighted Strategy Blend | `bots.u5726455_i2_i_i2_i` | Blends collection, supply, market, and room signals. |
-| Budget Reserve Bidder | `bots.u5726455_i_i2` | Reserves funds early and relaxes spending caps as the auction progresses. |
-| Endgame Boost Bidder | `bots.u5726455_i_i2_min` | Raises some bids for opponent pressure and missing paintings late in a game. |
-| Q-Learning Bidder | `bots.u5726455_q` | Uses a frozen offline-trained Q-table with heuristic fallbacks. |
-| Price Profile Bidder | `bots.u5726455_final` | Uses price history and lower price anchors when observations are sparse or volatile. |
-| Random Budget Bidder | `bots.random_bot` | Draws an integer from zero to its remaining budget. |
-| Fixed Bid 10 | `bots.flat_bot_10` | Bids 10 each round. |
-| Fixed Bid 15 | `bots.flat_bot_15` | Bids 15 each round by default. |
-| Fixed Bid 20 | `bots.flat_bot_20` | Bids 20 each round by default. |
+| Collection Balancer | `bots.collection_balancer` | Prioritizes artists with fewer paintings and adjusts to scarcity. |
+| Room-Size Bidder | `bots.room_size_bidder` | Uses different pricing and spending rules in small and large rooms. |
+| Adaptive Market Bidder | `bots.adaptive_market_bidder` | Learns from prices and its own recent wins and losses. |
+| Fixed-Bid Specialist | `bots.fixed_bid_specialist` | Detects recurring fixed prices and bids above them when it needs the artist. |
+| Weighted Strategy Blend | `bots.weighted_strategy_blend` | Blends collection, supply, market, and room signals. |
+| Budget Reserve Bidder | `bots.budget_reserve_bidder` | Reserves funds early and relaxes spending caps as the auction progresses. |
+| Endgame Boost Bidder | `bots.endgame_boost_bidder` | Raises some bids for opponent pressure and missing paintings late in a game. |
+| Q-Learning Bidder | `bots.q_learning_bidder` | Uses a frozen offline-trained Q-table with heuristic fallbacks. |
+| Price Profile Bidder | `bots.price_profile_bidder` | Uses price history and lower price anchors when observations are sparse or volatile. |
+| Random Budget Bidder | `bots.random_budget_bidder` | Draws an integer from zero to its remaining budget. |
+| Fixed Bid 10 | `bots.fixed_bid_10` | Bids 10 each round. |
+| Fixed Bid 15 | `bots.fixed_bid_15` | Bids 15 each round by default. |
+| Fixed Bid 20 | `bots.fixed_bid_20` | Bids 20 each round by default. |
 
 The change to Adaptive Market Bidder keys self and history lookups by seat ID. It also fixes calls through the short-auction advisor in Weighted Strategy Blend. Other strategies keep their bidding policies, including absolute phase thresholds in some heuristics. The Q-Learning Bidder uses a heuristic in rooms of two through four and falls back to a heuristic action for unseen states in larger rooms. The repository contains the frozen values and inference code. The training data, reward history, and trainer needed to recreate them are unavailable.
 
@@ -84,7 +84,7 @@ The change to Adaptive Market Bidder keys self and history lookups by seat ID. I
 Define a zero-argument `Bot` constructor with a string `name`. Keep the `get_bid(current_round, bots, winner_pays, artists_and_values, round_limit, starting_budget, painting_order, target_collection, my_bot_details, current_painting, winner_ids, amounts_paid)` keyword interface. Rounds are zero-indexed in bot input and one-indexed in results.
 
 - Read your own `budget`, `paintings`, and `score` from `my_bot_details`. Use `bot_unique_id` for self and history lookups. Several seats can have the same bot name.
-- Keep learned state on the instance. The web worker seeds Python's `random` for each bot. For strategies used in the direct Python benchmark, give each instance its own seedable RNG, following `random_bot.py`.
+- Keep learned state on the instance. The web worker seeds Python's `random` for each bot. For strategies used in the direct Python benchmark, give each instance its own seedable RNG, following `random_budget_bidder.py`.
 - Return an affordable integer. Test short rooms, exhausted budgets, repeated instances, and changing seat order. Avoid assuming that 200 rounds or a common starting budget applies in custom games.
 - Register repository-owned strategies in `web-app/backend/bot_registry.py` to expose them to the web arena. Run code you trust locally. Worker processes enforce deadlines and run with the application's operating-system permissions.
 
@@ -95,10 +95,10 @@ Define a zero-argument `Bot` constructor with a string `name`. Keep the `get_bid
 python benchmark.py --trials 5
 
 # Reproduce a specific room and allow the same strategy in multiple seats
-python benchmark.py --room u5726455_i2 random_bot random_bot --rounds 50 200 --seeds 7 21 58
+python benchmark.py --room adaptive_market_bidder random_budget_bidder random_budget_bidder --rounds 50 200 --seeds 7 21 58
 
 # Seeded comparison at a custom starting budget
-python benchmark.py --focus u5726455_q u5726455_final --rounds 75 --budget 750 --trials 10
+python benchmark.py --focus q_learning_bidder price_profile_bidder --rounds 75 --budget 750 --trials 10
 ```
 
 The first module in an explicit room is the focus strategy. The default suite evaluates each focus strategy against one random opponent and against a roster of one random and three fixed-price opponents. Each seed uses a matched painting sequence. The focus and opponents rotate through every seat, with opponent RNG seeds assigned to logical slots. `--fixed-seats` keeps the listed order. The four older validation scripts remain runnable using their historical room matrices and now write the standard reports.

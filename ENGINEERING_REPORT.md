@@ -11,8 +11,8 @@ The repository now has a shared simulator, explicit reference and custom rules, 
 | Files | Change |
 | --- | --- |
 | `utilities.py`, `arena.py`, `.gitignore` | Create CSV parent directories and preserve the legacy delimiter. Clean up the sample launcher and exclude generated logs and reports. |
-| `bots/u5726455_i2.py`, `bots/random_bot.py` | Key Adaptive Market Bidder state by seat ID. Let the direct Python simulator inject a private RNG into the random strategy. |
-| `bots/u5726455_final.py`, `bots/u5726455_i2_i.py`, `bots/u5726455_i2_i_i2_i.py`, `bots/u5726455_i_i2.py` | Remove a dormant name lookup and unused code. The strategy policies stay intact, including the weighted blend's corrected Adaptive Market advisor. |
+| `bots/adaptive_market_bidder.py`, `bots/random_budget_bidder.py` | Key Adaptive Market Bidder state by seat ID. Let the direct Python simulator inject a private RNG into the random strategy. |
+| `bots/price_profile_bidder.py`, `bots/fixed_bid_specialist.py`, `bots/weighted_strategy_blend.py`, `bots/budget_reserve_bidder.py` | Remove a dormant name lookup and unused code. The strategy policies stay intact, including the weighted blend's corrected Adaptive Market advisor. |
 | `web-app/backend/simulator.py` | Centralize rules, bid validation, scoring, accounting, snapshots, and deterministic randomness. |
 | `web-app/backend/bot_execution.py`, `bot_registry.py` | Run each web bot in a persistent process with its own seed and deadline. Use allowlisted strategy metadata without importing bot code during API discovery. |
 | `web-app/backend/lifecycle.py`, `app.py` | Give each game one producer and independent SSE cursors. Add cancellation, terminal failure, expiry, configurable limits, status and results endpoints, structured errors, and origin allowlisting. |
@@ -39,7 +39,7 @@ Local verification used macOS, Python 3.10.19, Flask 3.1.3 in a fresh virtual en
 | `npm run check` and `npm run lint` | Passed in the workspace and isolated source copy. |
 | `PLAYWRIGHT_CHROMIUM_EXECUTABLE="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" npm test` | 5 passed against live Flask and Next.js servers. Covered strategy loading, form validation, a completed auction, comparison chart, early rounds, replay, exports, reconnect, cancellation, bot errors, and a zero-score finish. |
 | `NEXT_TELEMETRY_DISABLED=1 npm run build` | Passed in the workspace and isolated source copy. Next.js 15.5.29 generated four static pages. The arena route was 9.6 kB and its first-load JavaScript was 112 kB. |
-| `python benchmark.py --room random_bot u5726455_i2 random_bot --rounds 12 --seeds 13 37` twice, with separate output directories | Passed. `diff -r` reported identical JSON, CSV, and Markdown. |
+| `python benchmark.py --room random_budget_bidder adaptive_market_bidder random_budget_bidder --rounds 12 --seeds 13 37` twice, with separate output directories | Passed. `diff -r` reported identical JSON, CSV, and Markdown. |
 | `python test_final_bot_cases.py --runs 1 --output /tmp/bidding-legacy-cases` | Produced reports for all six historical cases. |
 | `git diff --check` and `git diff --exit-code HEAD -- auctioneer.py` | Passed. The reference blob hash is `3001d9778612d6a07fbd087613d7e4b5cce8c0b4`. |
 

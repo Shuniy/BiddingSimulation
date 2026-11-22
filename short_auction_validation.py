@@ -6,38 +6,52 @@ from benchmark import run_legacy_suite
 
 ROUND_LIMITS = (50, 75, 100, 150)
 RUNS_PER_ROOM = 5
-CUSTOM_BOTS = ("u5726455", "u5726455_i", "u5726455_i2", "u5726455_q")
-FOCUS_BOTS = ("random_bot", "flat_bot_10", "flat_bot_15", *CUSTOM_BOTS)
+CUSTOM_BOTS = (
+    "collection_balancer",
+    "room_size_bidder",
+    "adaptive_market_bidder",
+    "q_learning_bidder",
+)
+FOCUS_BOTS = ("random_budget_bidder", "fixed_bid_10", "fixed_bid_15", *CUSTOM_BOTS)
 
 
 def unique_rooms(focus_bot: str) -> list[tuple[str, ...]]:
     """Generate stronger short-auction rooms with baseline-heavy mixes."""
 
     rooms = [
-        (focus_bot, "random_bot", "flat_bot_10", "flat_bot_15"),
-        (focus_bot, "random_bot", "random_bot", "flat_bot_10", "flat_bot_15"),
-        (focus_bot, "flat_bot_10", "flat_bot_10", "flat_bot_15"),
-        (focus_bot, "flat_bot_10", "flat_bot_15", "flat_bot_15"),
+        (focus_bot, "random_budget_bidder", "fixed_bid_10", "fixed_bid_15"),
+        (focus_bot, "random_budget_bidder", "random_budget_bidder", "fixed_bid_10", "fixed_bid_15"),
+        (focus_bot, "fixed_bid_10", "fixed_bid_10", "fixed_bid_15"),
+        (focus_bot, "fixed_bid_10", "fixed_bid_15", "fixed_bid_15"),
         (
             focus_bot,
-            "random_bot",
-            "flat_bot_10",
-            "flat_bot_10",
-            "flat_bot_15",
-            "flat_bot_15",
+            "random_budget_bidder",
+            "fixed_bid_10",
+            "fixed_bid_10",
+            "fixed_bid_15",
+            "fixed_bid_15",
         ),
     ]
 
     others = [bot for bot in CUSTOM_BOTS if bot != focus_bot]
     for other in others:
-        rooms.append((focus_bot, other, "random_bot", "flat_bot_10", "flat_bot_15"))
+        rooms.append((focus_bot, other, "random_budget_bidder", "fixed_bid_10", "fixed_bid_15"))
 
     for other_a, other_b in combinations(others, 2):
-        rooms.append((focus_bot, other_a, other_b, "random_bot", "flat_bot_10", "flat_bot_15"))
+        rooms.append(
+            (focus_bot, other_a, other_b, "random_budget_bidder", "fixed_bid_10", "fixed_bid_15")
+        )
 
     if focus_bot in CUSTOM_BOTS:
         rooms.append(
-            (focus_bot, "u5726455", "u5726455_i", "u5726455_i2", "u5726455_q", "flat_bot_15")
+            (
+                focus_bot,
+                "collection_balancer",
+                "room_size_bidder",
+                "adaptive_market_bidder",
+                "q_learning_bidder",
+                "fixed_bid_15",
+            )
         )
 
     seen = set()

@@ -12,10 +12,10 @@ def test_get_bots_returns_available_bot_modules():
 
     assert response.status_code == 200
     names_by_module = {bot["module"]: bot["displayName"] for bot in response.get_json()["bots"]}
-    assert names_by_module["bots.random_bot"] == "Random Budget Bidder"
-    assert names_by_module["bots.flat_bot_10"] == "Fixed Bid 10"
-    assert names_by_module["bots.u5726455"] == "Collection Balancer"
-    assert names_by_module["bots.u5726455_final"] == "Price Profile Bidder"
+    assert names_by_module["bots.random_budget_bidder"] == "Random Budget Bidder"
+    assert names_by_module["bots.fixed_bid_10"] == "Fixed Bid 10"
+    assert names_by_module["bots.collection_balancer"] == "Collection Balancer"
+    assert names_by_module["bots.price_profile_bidder"] == "Price Profile Bidder"
 
 
 def test_create_game_rejects_too_few_players():
@@ -27,7 +27,7 @@ def test_create_game_rejects_too_few_players():
             "players": [
                 {
                     "playerName": "Solo",
-                    "botModule": "bots.random_bot",
+                    "botModule": "bots.random_budget_bidder",
                     "startingBudget": 1001,
                 }
             ]
@@ -45,12 +45,12 @@ def test_sse_stream_emits_start_round_and_finish_events():
             "players": [
                 {
                     "playerName": "Random",
-                    "botModule": "bots.random_bot",
+                    "botModule": "bots.random_budget_bidder",
                     "startingBudget": 1001,
                 },
                 {
                     "playerName": "Flat",
-                    "botModule": "bots.flat_bot_10",
+                    "botModule": "bots.fixed_bid_10",
                     "startingBudget": 1001,
                 },
             ],

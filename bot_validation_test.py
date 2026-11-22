@@ -4,30 +4,30 @@ from benchmark import run_legacy_suite
 
 ROUND_LIMITS = (50, 75, 100, 150, 200, 300)
 RUNS_PER_ROOM = 10
-FOCUS_BOTS = ("u5726455_i", "u5726455_i2", "u5726455_i2_i")
+FOCUS_BOTS = ("room_size_bidder", "adaptive_market_bidder", "fixed_bid_specialist")
 COMPARISON_BOTS = (
-    "u5726455_i",
-    "u5726455_i2",
-    "u5726455_i2_i",
-    "u5726455",
-    "u5726455_q",
+    "room_size_bidder",
+    "adaptive_market_bidder",
+    "fixed_bid_specialist",
+    "collection_balancer",
+    "q_learning_bidder",
 )
 
 
 def build_rooms(focus_bot):
     rooms = [
-        (focus_bot, "random_bot"),
-        (focus_bot, "flat_bot_10"),
-        (focus_bot, "flat_bot_15"),
-        (focus_bot, "random_bot", "flat_bot_10", "flat_bot_15"),
-        (focus_bot, "u5726455", "u5726455_q"),
+        (focus_bot, "random_budget_bidder"),
+        (focus_bot, "fixed_bid_10"),
+        (focus_bot, "fixed_bid_15"),
+        (focus_bot, "random_budget_bidder", "fixed_bid_10", "fixed_bid_15"),
+        (focus_bot, "collection_balancer", "q_learning_bidder"),
         (
             focus_bot,
-            "u5726455",
-            "u5726455_q",
-            "random_bot",
-            "flat_bot_10",
-            "flat_bot_15",
+            "collection_balancer",
+            "q_learning_bidder",
+            "random_budget_bidder",
+            "fixed_bid_10",
+            "fixed_bid_15",
         ),
     ]
 
@@ -43,14 +43,14 @@ def build_rooms(focus_bot):
 
     full_room = [focus_bot]
     for other in (
-        "u5726455_i",
-        "u5726455_i2",
-        "u5726455_i2_i",
-        "u5726455",
-        "u5726455_q",
-        "random_bot",
-        "flat_bot_10",
-        "flat_bot_15",
+        "room_size_bidder",
+        "adaptive_market_bidder",
+        "fixed_bid_specialist",
+        "collection_balancer",
+        "q_learning_bidder",
+        "random_budget_bidder",
+        "fixed_bid_10",
+        "fixed_bid_15",
     ):
         if other != focus_bot:
             full_room.append(other)

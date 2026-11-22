@@ -13,4 +13,16 @@ select = ["E4", "E7", "E9", "F"]
 per-file-ignores = { "benchmark.py" = ["E402"], "bots/*.py" = ["E711", "E712"] }
 
 [tool.ruff.format]
-exclude = ["auctioneer.py", "bots/u*.py", "bots/flat_bot*.py"]
+exclude = [
+    "auctioneer.py",
+    "bots/adaptive_market_bidder.py",
+    "bots/budget_reserve_bidder.py",
+    "bots/collection_balancer.py",
+    "bots/endgame_boost_bidder.py",
+    "bots/fixed_bid_[0-9]*.py",
+    "bots/fixed_bid_specialist.py",
+    "bots/price_profile_bidder.py",
+    "bots/q_learning_bidder.py",
+    "bots/room_size_bidder.py",
+    "bots/weighted_strategy_blend.py",
+]

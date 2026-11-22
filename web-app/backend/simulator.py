@@ -210,7 +210,7 @@ class DynamicAuctionGame:
                 module = load_bot_module(config.bot_module)
                 bot = (
                     module.Bot(rng=random.Random(self._bot_seeds[index]))
-                    if config.bot_module == "bots.random_bot"
+                    if config.bot_module == "bots.random_budget_bidder"
                     else module.Bot()
                 )
                 bot_name = bot.name

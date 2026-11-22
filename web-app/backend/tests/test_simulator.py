@@ -20,8 +20,8 @@ def make_game(players, round_limit=1, seed=1):
     game = DynamicAuctionGame(
         game_id="test",
         players=[
-            PlayerConfig("A", "bots.flat_bot_10", 100),
-            PlayerConfig("B", "bots.flat_bot_15", 100),
+            PlayerConfig("A", "bots.fixed_bid_10", 100),
+            PlayerConfig("B", "bots.fixed_bid_15", 100),
         ],
         round_limit=round_limit,
         seed=seed,
@@ -71,8 +71,8 @@ def test_custom_budgets_initialise_per_player():
     game = DynamicAuctionGame(
         game_id="budget",
         players=[
-            PlayerConfig("A", "bots.flat_bot_10", 40),
-            PlayerConfig("B", "bots.flat_bot_15", 90),
+            PlayerConfig("A", "bots.fixed_bid_10", 40),
+            PlayerConfig("B", "bots.fixed_bid_15", 90),
         ],
         round_limit=1,
         seed=1,

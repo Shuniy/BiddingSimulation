@@ -1,18 +1,18 @@
 """
-Hybrid auction bot that keeps the adaptive `i2` pipeline and adds the strongest
-long-horizon controls from `i`.
+Hybrid auction bot that combines Adaptive Market Bidder's learning pipeline with
+Room-Size Bidder's controls for longer auctions.
 
-What stays from `i2`:
+From Adaptive Market Bidder:
 - state building -> learning -> feature extraction -> bid decision flow
 - market-price estimation from observed clears
 - opponent modelling and endgame urgency handling
 
-What is added from `i`:
+From Room-Size Bidder:
 - room-aware pressure bins and early volatility detection
 - explicit price floors for weak categories
 - stronger pace discipline in medium/long auctions
 
-New in `i3`:
+Fixed-Bid Specialist additions:
 - unique-id based self lookup, so mixed rooms are robust
 - flat-bot detection from observed winner-price patterns
 - anti-flat uplift that steps above 10/15 when the current artist is critical
@@ -20,7 +20,7 @@ New in `i3`:
 
 import math
 
-from bots.u5726455_i2 import Bot as BaseBot
+from bots.adaptive_market_bidder import Bot as BaseBot
 
 
 class Bot(BaseBot):

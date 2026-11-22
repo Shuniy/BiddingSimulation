@@ -12,19 +12,19 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 # Discovery must remain safe even when bot imports or constructors are slow.
 BOT_NAMES = {
-    "bots.flat_bot_10": "Fixed Bid 10",
-    "bots.flat_bot_15": "Fixed Bid 15",
-    "bots.flat_bot_20": "Fixed Bid 20",
-    "bots.random_bot": "Random Budget Bidder",
-    "bots.u5726455": "Collection Balancer",
-    "bots.u5726455_final": "Price Profile Bidder",
-    "bots.u5726455_i": "Room-Size Bidder",
-    "bots.u5726455_i2": "Adaptive Market Bidder",
-    "bots.u5726455_i2_i": "Fixed-Bid Specialist",
-    "bots.u5726455_i2_i_i2_i": "Weighted Strategy Blend",
-    "bots.u5726455_i_i2": "Budget Reserve Bidder",
-    "bots.u5726455_i_i2_min": "Endgame Boost Bidder",
-    "bots.u5726455_q": "Q-Learning Bidder",
+    "bots.fixed_bid_10": "Fixed Bid 10",
+    "bots.fixed_bid_15": "Fixed Bid 15",
+    "bots.fixed_bid_20": "Fixed Bid 20",
+    "bots.random_budget_bidder": "Random Budget Bidder",
+    "bots.collection_balancer": "Collection Balancer",
+    "bots.price_profile_bidder": "Price Profile Bidder",
+    "bots.room_size_bidder": "Room-Size Bidder",
+    "bots.adaptive_market_bidder": "Adaptive Market Bidder",
+    "bots.fixed_bid_specialist": "Fixed-Bid Specialist",
+    "bots.weighted_strategy_blend": "Weighted Strategy Blend",
+    "bots.budget_reserve_bidder": "Budget Reserve Bidder",
+    "bots.endgame_boost_bidder": "Endgame Boost Bidder",
+    "bots.q_learning_bidder": "Q-Learning Bidder",
 }
 
 

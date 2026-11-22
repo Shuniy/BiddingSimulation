@@ -4,7 +4,7 @@ from auctioneer import Auctioneer
 # Import some bots to play with
 # We have given you some basic bots to start with in the bots folder
 # You can also add your own bots to test against
-from bots import flat_bot_10, random_bot, u5726455
+from bots import fixed_bid_10, random_budget_bidder, collection_balancer
 
 
 def run_basic_auction():
@@ -12,7 +12,7 @@ def run_basic_auction():
     An example function that runs a basic auction with 3 bots
     """
     # Setup a room of bots to play against each other, imported above from the bots folder
-    room = [u5726455, flat_bot_10, random_bot]
+    room = [collection_balancer, fixed_bid_10, random_budget_bidder]
 
     # Setup the auction
     my_auction = Auctioneer(room=room)
@@ -25,10 +25,10 @@ def run_lots_of_auctions():
     An example if you want to run alot of auctions at once
     """
     # A large room with a few bots of the same type
-    room = [random_bot, random_bot, random_bot, u5726455]
+    room = [random_budget_bidder, random_budget_bidder, random_budget_bidder, collection_balancer]
     # Set the game type between "value" or "collection"
 
-    focus_name = u5726455.Bot().name
+    focus_name = collection_balancer.Bot().name
     win_count = 0
     run_count = 50
     for i in range(run_count):

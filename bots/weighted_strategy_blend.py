@@ -1,16 +1,16 @@
 import math
 
-from bots.u5726455_i import Bot as LongAdvisorBot
-from bots.u5726455_i2 import Bot as ShortAdvisorBot
-from bots.u5726455_i2_i import Bot as BaseBot
+from bots.room_size_bidder import Bot as LongAdvisorBot
+from bots.adaptive_market_bidder import Bot as ShortAdvisorBot
+from bots.fixed_bid_specialist import Bot as BaseBot
 
 
 class Bot(BaseBot):
     """
-    Feature-approximation successor to i3.
+    Weighted bidding strategy based on Fixed-Bid Specialist.
 
-    The bot keeps i3's robust opponent modelling and room-specific floors, but
-    now groups the state into six explicit feature blocks:
+    The bot uses Fixed-Bid Specialist's opponent model and room-specific floors.
+    It groups the auction state into six features:
     1. my collection state
     2. time and budget state
     3. future supply / scarcity
@@ -18,8 +18,8 @@ class Bot(BaseBot):
     5. market behaviour
     6. room structure
 
-    A smooth weighted scorer combines those blocks, then blends the result with
-    i3's anchor/floor logic so the policy stays stable in long auctions.
+    The weighted score is blended with Fixed-Bid Specialist's price anchors and
+    bid floors for stability in long auctions.
     """
 
     def __init__(self):

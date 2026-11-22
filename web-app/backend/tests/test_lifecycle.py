@@ -12,8 +12,8 @@ from backend.bot_registry import BOT_NAMES
 from backend.simulator import DynamicAuctionGame
 
 PLAYERS = [
-    {"playerName": "A", "botModule": "bots.random_bot", "startingBudget": 1001},
-    {"playerName": "B", "botModule": "bots.random_bot", "startingBudget": 1001},
+    {"playerName": "A", "botModule": "bots.random_budget_bidder", "startingBudget": 1001},
+    {"playerName": "B", "botModule": "bots.random_budget_bidder", "startingBudget": 1001},
 ]
 
 
@@ -222,7 +222,9 @@ def test_worker_timeout_disables_only_that_bot(app, monkeypatch):
 def test_seeded_web_games_have_identical_results_in_parallel(app):
     def run():
         client = app.test_client()
-        game = new_game(client, players=[*PLAYERS, {**PLAYERS[0], "botModule": "bots.u5726455_i2"}])
+        game = new_game(
+            client, players=[*PLAYERS, {**PLAYERS[0], "botModule": "bots.adaptive_market_bidder"}]
+        )
         return [event for _, event in stream(client, game)][1:]
 
     with ThreadPoolExecutor(max_workers=2) as pool:

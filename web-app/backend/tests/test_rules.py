@@ -56,7 +56,7 @@ def test_coursework_parity_for_inputs_order_and_outcomes(tmp_path, monkeypatch, 
     original.error_log_csv_file = tmp_path / "errors.csv"
     game = DynamicAuctionGame(
         "test",
-        [PlayerConfig(str(seat), "bots.flat_bot_10", 1001) for seat in range(len(room))],
+        [PlayerConfig(str(seat), "bots.fixed_bid_10", 1001) for seat in range(len(room))],
         seed=seed,
         tick_ms=0,
         mode="reference",
@@ -86,7 +86,7 @@ def test_coursework_parity_for_inputs_order_and_outcomes(tmp_path, monkeypatch, 
 
 
 def test_reference_negative_payment_versus_custom_rejection():
-    modules = [PlayerConfig(str(seat), "bots.flat_bot_10", 1001) for seat in range(2)]
+    modules = [PlayerConfig(str(seat), "bots.fixed_bid_10", 1001) for seat in range(2)]
     for mode in ("reference", "custom"):
         game = DynamicAuctionGame("test", modules, tick_ms=0, seed=1, mode=mode)
         for player, bid in zip(game.players, [-9, -3]):
@@ -101,7 +101,7 @@ def test_reference_negative_payment_versus_custom_rejection():
 def test_collection_hint_does_not_end_game_and_top_score_can_be_shared():
     game = DynamicAuctionGame(
         "test",
-        [PlayerConfig(str(seat), "bots.flat_bot_10", 1001) for seat in range(2)],
+        [PlayerConfig(str(seat), "bots.fixed_bid_10", 1001) for seat in range(2)],
         round_limit=80,
         tick_ms=0,
         seed=1,
@@ -120,7 +120,7 @@ def test_collection_hint_does_not_end_game_and_top_score_can_be_shared():
 def test_zero_bid_assigns_art_and_exhausted_bot_cannot_overspend():
     game = DynamicAuctionGame(
         "test",
-        [PlayerConfig(str(seat), "bots.flat_bot_10", 1) for seat in range(3)],
+        [PlayerConfig(str(seat), "bots.fixed_bid_10", 1) for seat in range(3)],
         round_limit=4,
         seed=91,
         tick_ms=0,
@@ -139,7 +139,7 @@ def test_zero_bid_assigns_art_and_exhausted_bot_cannot_overspend():
 def test_nonconvertible_or_overbudget_bids_become_zero(bid):
     game = DynamicAuctionGame(
         "test",
-        [PlayerConfig(str(seat), "bots.flat_bot_10", 12) for seat in range(2)],
+        [PlayerConfig(str(seat), "bots.fixed_bid_10", 12) for seat in range(2)],
         round_limit=1,
         seed=1,
         tick_ms=0,
@@ -153,8 +153,8 @@ def test_nonconvertible_or_overbudget_bids_become_zero(bid):
 @pytest.mark.parametrize(
     "room",
     [
-        ("random_bot", "random_bot", "random_bot"),
-        ("random_bot", "u5726455_i2", "u5726455_final", "flat_bot_15"),
+        ("random_budget_bidder", "random_budget_bidder", "random_budget_bidder"),
+        ("random_budget_bidder", "adaptive_market_bidder", "price_profile_bidder", "fixed_bid_15"),
     ],
 )
 def test_seeded_local_simulations_and_global_rng_isolation(room):
@@ -193,7 +193,7 @@ def test_duplicate_strategy_uses_own_budget_when_seat_order_changes(module):
     game.amounts_paid = [12, 26, 9]
     game._bid_order.reverse()
     bids, errors = game._collect_bids()
-    if "flat_bot" in module:
+    if module.rsplit(".", 1)[-1] in {"fixed_bid_10", "fixed_bid_15", "fixed_bid_20"}:
         assert [(error["playerId"], error["message"]) for error in errors] == [
             (first.id, "Over-budget bid changed to 0")
         ]
@@ -205,7 +205,8 @@ def test_duplicate_strategy_uses_own_budget_when_seat_order_changes(module):
 
 
 @pytest.mark.parametrize(
-    "module", ["bots.u5726455_i2", "bots.u5726455_final", "bots.u5726455_i_i2"]
+    "module",
+    ["bots.adaptive_market_bidder", "bots.price_profile_bidder", "bots.budget_reserve_bidder"],
 )
 def test_duplicate_state_uses_expected_collection_score_and_history(module, monkeypatch):
     game = DynamicAuctionGame(
@@ -244,7 +245,7 @@ def test_discovered_strategies_have_valid_class_and_names():
 
 
 def test_benchmark_zero_score_never_counts_as_win_and_is_reproducible():
-    case = Scenario("Two duplicates", ("bots.flat_bot_10", "bots.flat_bot_10"), 1)
+    case = Scenario("Two duplicates", ("bots.fixed_bid_10", "bots.fixed_bid_10"), 1)
     report = run_experiment([case], [1, 2])
     assert report == run_experiment([case], [1, 2])
     assert report[0]["summary"]["no_winner"] == 4

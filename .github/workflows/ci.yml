@@ -26,8 +26,8 @@ jobs:
       - run: python -m pytest -q
       - name: Deterministic benchmark smoke
         run: |
-          python benchmark.py --room random_bot u5726455_i2 random_bot --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-first"
-          python benchmark.py --room random_bot u5726455_i2 random_bot --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-second"
+          python benchmark.py --room random_budget_bidder adaptive_market_bidder random_budget_bidder --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-first"
+          python benchmark.py --room random_budget_bidder adaptive_market_bidder random_budget_bidder --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-second"
           diff -r "$RUNNER_TEMP/bidding-first" "$RUNNER_TEMP/bidding-second"
 
   frontend:

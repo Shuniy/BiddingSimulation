@@ -13,14 +13,14 @@ async function setUpCustomGame(page: Page, rounds = "12") {
   await page.getByLabel("Seed", { exact: true }).fill("4");
   await page.getByLabel("Player 1 name").fill('=Alice, "A"');
   await page.getByLabel("Player 1 budget").fill("900");
-  await page.getByLabel("Player 1 strategy").selectOption("bots.flat_bot_15");
-  await page.getByLabel("Player 2 strategy").selectOption("bots.flat_bot_10");
+  await page.getByLabel("Player 1 strategy").selectOption("bots.fixed_bid_15");
+  await page.getByLabel("Player 2 strategy").selectOption("bots.fixed_bid_10");
 }
 
 test("runs a real auction, inspects an early round, and exports all results", async ({ page }) => {
   await setUpCustomGame(page);
   await page.getByRole("button", { name: "Add player" }).click();
-  await page.getByLabel("Player 3 strategy").selectOption("bots.flat_bot_10");
+  await page.getByLabel("Player 3 strategy").selectOption("bots.fixed_bid_10");
   await page.getByRole("button", { name: "Run game" }).click();
   await expect(gameStatus(page)).toHaveText("completed");
   await expect(page.getByRole("region", { name: "Game controls" })).toContainText("Seed 4");

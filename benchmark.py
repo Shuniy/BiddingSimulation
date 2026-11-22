@@ -153,10 +153,15 @@ def run_experiment(
 def baseline_scenarios(focus_modules: Iterable[str], rounds: Iterable[int]) -> Iterable[Scenario]:
     rounds = tuple(rounds)
     baselines = (
-        ("Random opponent", ("bots.random_bot",)),
+        ("Random opponent", ("bots.random_budget_bidder",)),
         (
             "Mixed opponents",
-            ("bots.random_bot", "bots.flat_bot_10", "bots.flat_bot_15", "bots.flat_bot_20"),
+            (
+                "bots.random_budget_bidder",
+                "bots.fixed_bid_10",
+                "bots.fixed_bid_15",
+                "bots.fixed_bid_20",
+            ),
         ),
     )
     for focus in focus_modules:
