@@ -9,7 +9,7 @@ You can run an auction game like this:
 	my_auction = Auctioneer(<ADD ANY VARIABLES YOU WANT TO HERE>)
 	winners = my_auction.run_auction()
 
-`run_auction()` returns a list of winning bot names. For example, if the Random Budget Bidder wins, it returns `["Random Budget Bidder"]`.
+`run_auction()` returns a list of winner IDs formed from the bot name and seat number. For example, a win by the Random Budget Bidder in seat 2 returns `["Random Budget Bidder-2"]`.
 
 The arena file has some example functions that show how to run auctions with different bots and different variables. 
 

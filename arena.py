@@ -37,9 +37,9 @@ def run_lots_of_auctions():
         # Setup the auction
         # slowdown = 0 makes it fast
         my_auction = Auctioneer(room=room, slowdown=0)
-        # run_auction() returns a list of winners, sometimes there are more than one winner if there is a tie
+        # Winner IDs end with the bot's seat number.
         winners = my_auction.run_auction()
-        if focus_name in winners:
+        if any(winner.rsplit("-", 1)[0] == focus_name for winner in winners):
             win_count += 1
     print("My bot won {} of {} games".format(win_count, run_count))
 
