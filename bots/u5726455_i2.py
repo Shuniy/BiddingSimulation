@@ -35,6 +35,7 @@ class Bot(object):
             current_painting=current_painting,
             winner_ids=winner_ids,
             amounts_paid=amounts_paid,
+            my_unique_id=my_bot_details["bot_unique_id"],
         )
 
         # if we are out of budget, we can't bid
@@ -63,9 +64,10 @@ class Bot(object):
         current_painting,
         winner_ids,
         amounts_paid,
+        my_unique_id,
     ):
         normalized_bots = [self.normalize_bot(bot) for bot in bots]
-        my_bot = self.find_my_bot(normalized_bots)
+        my_bot = next(bot for bot in normalized_bots if bot["bot_unique_id"] == my_unique_id)
 
         return {
             "current_round": int(current_round),
@@ -100,12 +102,6 @@ class Bot(object):
 
     def normalize_paintings(self, paintings):
         return {artist: int(paintings.get(artist, 0)) for artist in self.artists}
-
-    def find_my_bot(self, bots):
-        for bot in bots:
-            if str(bot["bot_name"]) == str(self.name):
-                return bot
-        return bots[0]
 
     # =========================
     # Learning / regret updates

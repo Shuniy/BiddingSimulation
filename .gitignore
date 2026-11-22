@@ -297,3 +297,9 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,nextjs,flask
+
+# Generated auction logs and benchmark reports
+/data/
+
+# Frontend source helpers (Python virtualenvs also use lib/).
+!/web-app/frontend/src/lib/

@@ -380,9 +380,7 @@ class Bot(BaseBot):
 
     def decide_bid(self, state, features):
         my_budget = state["my_budget"]
-        starting_budget = state["starting_budget"]
         progress = state["progress"]
-        remaining_rounds = max(1, state["remaining_rounds"])
         current_round = state["current_round"]
         round_limit = state["round_limit"]
 

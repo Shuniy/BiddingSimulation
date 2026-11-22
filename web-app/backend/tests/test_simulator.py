@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import types
 
 import pytest
 
@@ -127,4 +126,3 @@ def test_seeded_tie_break_is_deterministic():
     )["winnerId"]
 
     assert first_winner == second_winner
-

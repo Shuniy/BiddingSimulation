@@ -11,9 +11,7 @@ def test_get_bots_returns_available_bot_modules():
     response = client.get("/api/bots")
 
     assert response.status_code == 200
-    names_by_module = {
-        bot["module"]: bot["displayName"] for bot in response.get_json()["bots"]
-    }
+    names_by_module = {bot["module"]: bot["displayName"] for bot in response.get_json()["bots"]}
     assert names_by_module["bots.random_bot"] == "Random Budget Bidder"
     assert names_by_module["bots.flat_bot_10"] == "Fixed Bid 10"
     assert names_by_module["bots.u5726455"] == "Collection Balancer"
@@ -64,8 +62,12 @@ def test_sse_stream_emits_start_round_and_finish_events():
     game_id = create_response.get_json()["gameId"]
 
     stream_response = client.get(f"/api/games/{game_id}/events")
-    chunks = stream_response.get_data(as_text=True).strip().split("\n\n")
-    events = [json.loads(chunk.removeprefix("data: ")) for chunk in chunks]
+    events = [
+        json.loads(line[6:])
+        for line in stream_response.get_data(as_text=True).splitlines()
+        if line.startswith("data: ")
+    ]
+    stream_response.close()
 
     assert events[0]["type"] == "game_started"
     assert [event["type"] for event in events].count("round_finished") == 2
@@ -79,4 +81,3 @@ def test_reset_unknown_game_is_ok():
 
     assert response.status_code == 200
     assert response.get_json() == {"ok": True}
-

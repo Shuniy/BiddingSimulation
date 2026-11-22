@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import random
 
 
@@ -6,7 +8,8 @@ class Bot(object):
     Bids a random amount of it's budget
     """
 
-    def __init__(self):
+    def __init__(self, rng: random.Random | None = None):
+        self.rng = rng
         self.name = "Random Budget Bidder"
 
     def get_bid(
@@ -25,4 +28,4 @@ class Bot(object):
         amounts_paid,
     ):
         my_budget = my_bot_details["budget"]
-        return random.randint(0, my_budget)
+        return (self.rng or random).randint(0, my_budget)

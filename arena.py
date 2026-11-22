@@ -1,5 +1,3 @@
-import csv
-
 # Import the auctioneer, to run your auctions
 from auctioneer import Auctioneer
 

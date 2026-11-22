@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: web-app/backend/requirements*.txt
+      - run: python -m pip install -r web-app/backend/requirements-dev.txt
+      - run: >-
+          python -m compileall -q auctioneer.py arena.py benchmark.py utilities.py
+          bot_validation_test.py round_sweep_test.py short_auction_validation.py
+          test_final_bot_cases.py bots web-app/backend
+      - run: ruff check && ruff format --check
+      - run: python -m pytest -q
+      - name: Deterministic benchmark smoke
+        run: |
+          python benchmark.py --room random_bot u5726455_i2 random_bot --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-first"
+          python benchmark.py --room random_bot u5726455_i2 random_bot --rounds 12 --seeds 13 37 --output "$RUNNER_TEMP/bidding-second"
+          diff -r "$RUNNER_TEMP/bidding-first" "$RUNNER_TEMP/bidding-second"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web-app/frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: web-app/backend/requirements.txt
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: web-app/frontend/package-lock.json
+      - run: python -m pip install -r ../backend/requirements.txt
+      - run: npm ci
+      - run: npm run check
+      - run: npm run lint
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+      - run: npm run build

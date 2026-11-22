@@ -568,7 +568,6 @@ class Bot(BaseBot):
         supply_block = features["supply_block"]
         pressure_block = features["pressure_block"]
         market_block = features["market_block"]
-        room_block = features["room_block"]
         approximation_block = features["approximation_block"]
 
         floor_bid = self.compute_floor_bid(

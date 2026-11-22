@@ -204,13 +204,6 @@ class Bot(object):
         # normalize paintings to ensure we have integer counts for each artist, which can help avoid issues with unexpected formats and make it easier to compute features and make decisions based on the paintings data -
         return {artist: int(paintings.get(artist, 0)) for artist in self.artists}
 
-    def find_my_bot(self, bots):
-        # find my bot in the list of bots based on my name, which can help us identify our own bot details in the data provided to us and ensure that we are working with the correct information about ourselves in our state representation and logic -
-        for bot in bots:
-            if str(bot["bot_name"]) == str(self.name):
-                return bot
-        return bots[0]
-
     def percentile(self, values, q):
         if not values:
             return 0
